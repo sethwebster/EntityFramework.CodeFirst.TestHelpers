@@ -1,0 +1,7 @@
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\bin\Release\EntityFramework.CodeFirst.TestHelpers.dll
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\bin\Release\EntityFramework.CodeFirst.TestHelpers.pdb
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\bin\Release\EntityFramework.dll
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\bin\Release\EntityFramework.xml
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\obj\Release\ResolveAssemblyReference.cache
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\obj\Release\EntityFramework.CodeFirst.TestHelpers.dll
+E:\Users\Seth Webster\Documents\Visual Studio 2010\Projects\EntityFramework.CodeFirst.TestHelpers\EntityFramework.CodeFirst.TestHelpers\obj\Release\EntityFramework.CodeFirst.TestHelpers.pdb

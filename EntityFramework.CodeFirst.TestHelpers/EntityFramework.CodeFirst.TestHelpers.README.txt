@@ -1,0 +1,167 @@
+﻿EntityFramework.CodeFirst.TestHelpers
+-------------------------------------
+A couple of helpful additions to allow for dependency injection of Entity Framework.
+
+Normally, when creating a DbContext, you simply derive from that class and define which collections
+will exist.  Obviously this won't work with DI as we'll need to work at the interface level. There are 
+some quirks to working at the interface level in Entity Framework that we've solved with these simple
+additions, and approach.
+
+1. Creating a context
+=====================
+There are three steps to creating an injectable, testable Code First Entity Framework context 
+(not including model definition).
+
+	1. Define your contract
+	2. Define your application implementation
+	3. Define your testable implementation - *Note* You may also skip this if using a mocking 
+											 framework
+
+1.1 Define your contract
+========================
+This will serve as our interface for using
+DI.  To this end, you must include the methods from DbContext you will want to use in your 
+application; typically, "SaveChanges".
+.
+.
+.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Demo.Models;
+using System.Data.Entity;
+
+namespace Demo
+{
+	public interface IDemoDataContext
+	{
+		IDbSet<Person> People{ get; set; }
+		IDbSet<Property> Properties { get; set; }
+		IDbSet<Item> Items { get; set; }
+		IDbSet<Transaction> Transactions { get; set; }
+		int SaveChanges();
+	}
+}
+.
+.
+.
+1.2 Define your application implementation
+==========================================
+One of the promises of Code First, is faster development. Things are only slightly different in 
+this approach. Normally, you will inherit from the DbContext class and define the collections that
+represent your tables.  Here, we want to do this at the interface level for easily swapping out 
+implementations.  However, we still must derive from our DbContext.  
+
+This is accomplished as follows:
+.
+.
+.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Demo.Models;
+using System.Data.Entity;
+
+namespace Demo
+{
+	public class DemoDataContext : DbContext, IDemoDataContext
+	{
+		IDbSet<Person> People{ get; set; }
+		IDbSet<Property> Properties { get; set; }
+		IDbSet<Item> Items { get; set; }
+		IDbSet<Transaction> Transactions { get; set; }
+	}
+}
+.
+.
+.
+
+DbContext handles implementation of "SaveChanges" so all that is required is to expose the properties
+for DbContext to map as tables and to satisfy the contract. Normally when attempting this approach, you 
+will lose some important functionality because if using IDbSet, which is IQueryable and does not contain
+all of the same methods for Entity Framework, such as "Include" for loading dependencies.  This is solved
+with the "QueryableExtensions" which reattach this functionality to IDbSet transparently to consumers.
+
+At this point, may use DemoDataContext as you would a normal DbContext.
+
+1.3 Define your testable implementation
+=======================================
+For our testable version, we'll simply derive from our interface and use our TestableDbSet implementation 
+to provide collection-like behavior for the class.  If you are using a mocking framework, you can probably
+accomplish most of this using that framework; I like creating a basic implementation that I can use for 
+test data, etc. without having to write extra code.
+.
+.
+.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Demo.Models;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
+
+namespace Demo.Tests.Helpers
+{
+	public class TestDemoDataContext : IDemoDataContext
+	{
+		private TestableDbSet<Person> people = new TestableDbSet<Person>(); 
+		private TestableDbSet<Property> properties = new TestableDbSet<Property>();
+		private TestableDbSet<Item> items = new TestableDbSet<Item>();
+		private TestableDbSet<Transaction> transactions = new TestableDbSet<Transaction>();
+
+		public IDbSet<Person> People 
+		{ 
+			get
+			{
+				return people;
+			}
+			set
+			{
+				people = (TestableDbSet<Person>)value;
+			}
+		}
+		IDbSet<Property> Properties	
+		{ 
+			get
+			{
+				return properties;
+			}
+			set
+			{
+				properties = (TestableDbSet<Property>)value;
+			}
+		}
+		IDbSet<Item> Items 
+		{ 
+			get
+			{
+				return items;
+			}
+			set
+			{
+				items = (TestableDbSet<Item>)value;
+			}
+		}
+		IDbSet<Transaction> Transactions
+		{ 
+			get
+			{
+				return transactions;
+			}
+			set
+			{
+				transactions = (TestableDbSet<Transaction>)value;
+			}
+		}
+	}
+}
+.
+.
+.
+Now you may simply pass this implementation into your Controller constructors, or use a 
+dependency framekwork to do so for you. You may populate with sample data consistent with whatever
+scenario you are testing.
+
