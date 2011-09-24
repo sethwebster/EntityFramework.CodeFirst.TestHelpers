@@ -50,6 +50,7 @@
     <Compile Include="TestableDbSet.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EntityFramework.CodeFirst.TestHelpers.nupkg" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
